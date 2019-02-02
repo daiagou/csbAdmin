@@ -52,6 +52,57 @@
         </el-form-item>
 
 
+        <el-form-item>
+            <el-row :gutter="20">
+                <el-col :span="5">
+                    <div class="grid-content bg-purple-light">
+                        <el-input placeholder="商品详细图片url" v-model="formData.detailPicUrl1"></el-input>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="5">
+                    <div class="grid-content bg-purple-light">
+                        <el-input placeholder="商品详细图片url" v-model="formData.detailPicUrl2"></el-input>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="5">
+                    <div class="grid-content bg-purple-light">
+                        <el-input placeholder="商品详细图片url" v-model="formData.detailPicUrl3"></el-input>
+                    </div>
+                </el-col>
+                <el-col :span="5">
+                    <el-upload
+                            action=""
+                            class="upload-demo"
+                            ref="uploadDetail1"
+                            name="file"
+                            :show-file-list="false"
+                            :auto-upload="true"
+                            :http-request="uploadDetailImg">
+                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                    </el-upload>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="5">
+                    <div class="grid-content bg-purple-light">
+                        <el-input placeholder="商品详细图片url" v-model="formData.detailPicUrl4"></el-input>
+                    </div>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="5">
+                    <div class="grid-content bg-purple-light">
+                        <el-input placeholder="商品详细图片url" v-model="formData.detailPicUrl5"></el-input>
+                    </div>
+                </el-col>
+            </el-row>
+        </el-form-item>
+
+
 
         <el-form-item>
             <el-col :span="15">
@@ -134,10 +185,46 @@
                                     width="200">
                             </el-table-column>
                             <el-table-column
-                                    label="">
+                                    label=""
+                                    width="250">
                                 <template slot-scope="scope">
                                     <el-button @click="handleEdit(scope.row)" type="primary">修改</el-button>
                                     <el-button @click="deleteRow(scope.row)" type="primary">删除</el-button>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="详细1"
+                                    width="250">
+                                <template slot-scope="scope" >
+                                    <img :src="scope.row.detailPicUrl1" style="width: 150px;height: 100px;">
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="详细2"
+                                    width="250">
+                                <template slot-scope="scope" >
+                                    <img :src="scope.row.detailPicUrl2" style="width: 150px;height: 100px;">
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="详细3"
+                                    width="250">
+                                <template slot-scope="scope" >
+                                    <img :src="scope.row.detailPicUrl3" style="width: 150px;height: 100px;">
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="详细4"
+                                    width="250">
+                                <template slot-scope="scope" >
+                                    <img :src="scope.row.detailPicUrl4" style="width: 150px;height: 100px;">
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    label="详细5"
+                                    width="250">
+                                <template slot-scope="scope" >
+                                    <img :src="scope.row.detailPicUrl5" style="width: 150px;height: 100px;">
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -248,20 +335,25 @@
                     goodsType: '',
                     createTime: '',
                     updateTime: '',
+                    detailPicUrl1: '',
+                    detailPicUrl2: '',
+                    detailPicUrl3: '',
+                    detailPicUrl4: '',
+                    detailPicUrl5: '',
                 },
                 queryData: {
                     goodsName: '',
                     goodsType: '',
                 },
-                dialogData: {
-                    id: '',
-                    goodsName: '',
-                    price: '',
-                    picUrl: '',
-                    goodsType: '',
-                    createTime: '',
-                    updateTime: '',
-                },
+                // dialogData: {
+                //     id: '',
+                //     goodsName: '',
+                //     price: '',
+                //     picUrl: '',
+                //     goodsType: '',
+                //     createTime: '',
+                //     updateTime: '',
+                // },
                 //表格数据
                 tableData: [],
             }
@@ -319,6 +411,33 @@
                 });
             },
 
+            uploadDetailImg(param) {
+                console.log(param);
+                let uploadData = new FormData();
+                uploadData.append('file', param.file);
+                let config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+                uploadImg(uploadData,config).then(data => {
+                    if (data.status != 0) {
+                        this.$alert(data.message);
+                    } else {
+                        console.log(data);
+                        // this.formData.picUrl = data.data;
+                        // this.formData['detailPicUrl1']=data.data;
+                        for(let i=1;i<6;i++){
+                            if(!this.formData['detailPicUrl'+i]){
+                                this.formData['detailPicUrl'+i]=data.data;
+                                return ;
+                            }
+                        }
+
+                    }
+                });
+            },
+
 
             saveOrUpdate(){
                 if(this.buttonValue=='保存'){
@@ -370,7 +489,7 @@
             handleEdit(row) {
                 console.log( this.formData);
                 console.log( row);
-                this.formData=Object.assign({}, row);;
+                this.formData=Object.assign({}, row);
                 this.buttonValue='修改';
             },
 
