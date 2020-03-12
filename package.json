@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "moment": "^2.23.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "echarts": "^4.2.0-rc.1",
     "element-ui": "^2.4.8",
     "jquery": "^3.3.1",
